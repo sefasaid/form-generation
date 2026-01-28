@@ -41,9 +41,12 @@ describe('AppController', () => {
           id: 'form-1',
           key: 'glp1',
           name: 'Test Form',
-          version: '1.0.0',
+          version: 1,
           startStepId: 'step-1',
           createdAt: new Date(),
+          startStepKey: 'step-1',
+          description: 'Test Description',
+          isActive: true,
         },
       ];
 
@@ -71,9 +74,12 @@ describe('AppController', () => {
         id: 'form-1',
         key: 'glp1',
         name: 'Test Form',
-        version: '1.0.0',
+        version: 1,
         startStepId: 'step-1',
         createdAt: new Date(),
+        startStepKey: 'step-1',
+        description: 'Test Description',
+        isActive: true,
       };
 
       mockAppService.getForm.mockResolvedValue(mockForm);

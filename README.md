@@ -1,104 +1,211 @@
-# New Nx Repository
+# Form Assignment
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+A comprehensive dynamic form and survey management system built with modern web technologies. This application enables users to create complex, conditional forms with branching logic, real-time updates, and automated evaluation systems.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+## 🚀 Features
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/nx-api/js?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+### Form Management
+- **Dynamic Form Builder**: Create forms with multiple step types (TEXT, NUMBER, RADIO, CHECKBOX, COMPUTED, FINAL)
+- **Conditional Branching**: Define complex branching rules based on user answers with multiple operators (EQ, NEQ, GT, GTE, LT, LTE, INCLUDES, NOT_INCLUDES, COUNT_GTE)
+- **Computed Steps**: Calculate values dynamically using JavaScript expressions based on previous answers
+- **Form Versioning**: Support for form versioning to track changes over time
+- **Optional Rules**: Define form-level optional rules that evaluate across multiple steps
 
-## Generate a library
+### Evaluation System
+- **Automated Evaluation**: Forms automatically evaluate user responses and provide results:
+  - **ELIGIBLE**: User meets all criteria
+  - **INELIGIBLE**: User does not meet requirements
+  - **CLINICAL_REVIEW**: Requires manual review
+- **Priority-based Rules**: Branch rules are evaluated by priority, allowing complex decision trees
+- **Result Reasons**: Track specific reasons for evaluation outcomes
 
-```sh
-npx nx g @nx/js:lib packages/pkg1 --publishable --importPath=@my-org/pkg1
+### Real-time Features
+- **WebSocket Integration**: Real-time updates using Socket.IO for live form session management
+- **Session Tracking**: Monitor form completion progress in real-time
+
+### Admin Panel
+- **Form Creation & Management**: Full CRUD operations for forms via admin interface
+- **Session Management**: View and monitor all form sessions
+- **Authentication**: Secure admin access with JWT-based authentication
+
+### User Experience
+- **Responsive Design**: Mobile-first, responsive UI built with Tailwind CSS
+- **Dark Mode**: Default in dark mode, light mode fully sported
+- **Modern UI**: Clean, intuitive interface with smooth transitions
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **Next.js 16**: React framework with App Router
+- **React 19**: Latest React version
+- **TypeScript**: Type-safe development
+- **Tailwind CSS**: Utility-first CSS framework
+- **Sonner**: Toast notifications
+- **Socket.IO Client**: Real-time communication
+
+### Backend
+- **NestJS**: Progressive Node.js framework
+- **TypeScript**: Type-safe backend development
+- **Prisma**: Modern ORM for database management
+- **PostgreSQL**: Relational database
+- **Socket.IO**: WebSocket server for real-time features
+- **Passport JWT**: Authentication strategy
+- **bcrypt**: Password hashing
+
+### Infrastructure & Tools
+- **Nx**: Monorepo tooling and build system
+- **Prisma**: Database schema management and migrations
+- **Jest**: Testing framework
+- **Cypress**: End-to-end testing
+- **ESLint**: Code linting
+- **Webpack**: Module bundling for API
+
+## 📁 Project Structure
+
+```
+form/
+├── apps/
+│   ├── api/              # NestJS backend API
+│   ├── frontend/         # Next.js frontend application
+│   └── frontend-e2e/     # Cypress E2E tests
+├── libs/
+│   ├── nextFetch/        # Shared fetch utilities
+│   └── prismaModule/     # Prisma client module
+├── packages/
+│   └── prisma-client-types/  # Prisma type generator
+└── prisma/               # Database schema and migrations
 ```
 
-## Run tasks
+## 🏃 Getting Started
 
-To build the library use:
+### Prerequisites
+- Node.js (v20+)
+- PostgreSQL database
+- npm or yarn
 
-```sh
-npx nx build pkg1
+### Installation
+
+1. **Clone the repository**
+```bash
+git clone <repository-url>
+cd form
 ```
 
-To run any task with Nx use:
-
-```sh
-npx nx <target> <project-name>
+2. **Install dependencies**
+```bash
+npm install
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+3. **Set up the database**
+```bash
+# Configure your database connection in prisma/schema.prisma
+# Then run migrations
+npx prisma migrate dev
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Versioning and releasing
-
-To version and release the library use
-
-```
-npx nx release
+# Seed the database (optional)
+npx prisma db seed
 ```
 
-Pass `--dry-run` to see what would happen without actually releasing the library.
+4. **Start the development servers**
 
-[Learn more about Nx release &raquo;](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+```bash
+# Start API server
+nx serve api
 
-## Keep TypeScript project references up to date
-
-Nx automatically updates TypeScript [project references](https://www.typescriptlang.org/docs/handbook/project-references.html) in `tsconfig.json` files to ensure they remain accurate based on your project dependencies (`import` or `require` statements). This sync is automatically done when running tasks such as `build` or `typecheck`, which require updated references to function correctly.
-
-To manually trigger the process to sync the project graph dependencies information to the TypeScript project references, run the following command:
-
-```sh
-npx nx sync
+# Start frontend (in another terminal)
+nx dev frontend
 ```
 
-You can enforce that the TypeScript project references are always in the correct state when running in CI by adding a step to your CI job configuration that runs the following command:
+The API will be available at `http://localhost:3001` (or configured port) and the frontend at `http://localhost:3001` (or configured port).
 
-```sh
-npx nx sync:check
+## 📚 How It Works
+
+### Form Flow
+
+1. **Form Creation**: Admins create forms with steps, options, and branching rules
+2. **Session Start**: Users start a survey session, creating a new `FormSession`
+3. **Step Navigation**: Users answer questions, and the system:
+   - Validates answers
+   - Evaluates branch rules
+   - Computes computed steps
+   - Determines next step or evaluation result
+4. **Real-time Updates**: Changes are broadcast via WebSocket to connected clients
+5. **Evaluation**: Forms automatically evaluate eligibility based on configured rules
+
+### Branching Logic
+
+Forms support complex conditional branching:
+- **Step-level branches**: Each step can have multiple branch rules evaluated by priority
+- **Operators**: Support for comparison operators (EQ, GT, LT, etc.) and array operations
+- **Early termination**: Rules can end the form with INELIGIBLE or CLINICAL_REVIEW results
+- **Dynamic navigation**: Next step determined by matching branch rules
+
+### Computed Steps
+
+Steps can compute values using JavaScript expressions:
+```javascript
+// Example: BMI calculation
+step.computeExpr = "(weight / (height * height)) * 703"
 ```
 
-[Learn more about nx sync](https://nx.dev/reference/nx-commands#sync)
+The system provides access to previous answers via step keys in the expression context.
 
-## Nx Cloud
+## 🔐 Authentication
 
-Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
+Admin routes are protected with JWT authentication:
+- Login endpoint: `POST /auth/login`
+- Protected routes require `Authorization: Bearer <token>` header
+- Admin guard validates JWT tokens
 
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## 🧪 Testing
 
-### Set up CI (non-Github Actions CI)
+```bash
+# Run unit tests
+nx test api
+nx test frontend
 
-**Note:** This is only required if your CI provider is not GitHub Actions.
-
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
-npx nx g ci-workflow
+# Run E2E tests
+nx e2e frontend-e2e
 ```
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## 📝 API Endpoints
 
-## Install Nx Console
+### Public Endpoints
+- `GET /` - Get all active forms
+- `GET /:id` - Get form by ID
+- `POST /forms/start` - Start a new form session
+- `GET /forms/session/:id` - Get session details
+- `POST /forms/session/:id/answer` - Submit an answer
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
+### Admin Endpoints (Protected)
+- `GET /admin/forms` - List all forms
+- `POST /admin/forms` - Create a new form
+- `PUT /admin/forms/:key` - Update a form
+- `GET /admin/forms/:key` - Get form by key
+- `GET /admin/sessions` - List all sessions
+- `GET /admin/sessions/:id` - Get session details
 
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+### Auth Endpoints
+- `POST /auth/login` - Admin login
 
-## Useful links
+## 🌐 WebSocket Events
 
-Learn more:
+- **RELOAD**: Sent to clients when session state changes
+- Socket ID is tracked for targeted message delivery
 
-- [Learn more about this workspace setup](https://nx.dev/nx-api/js?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## 📦 Building for Production
 
-And join the Nx community:
+```bash
+# Build API
+nx build api
 
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+# Build frontend
+nx build frontend
+```
+
+## Other things to mention
+
+- Created custom type builder for frontend. When using ```prisma generate``` it automatically builds prisma types for frontend to keep typesafe between projects. ( I tried using prisma browser but it doesn't contain nested fields)
+- To create initial database use  ```prisma db seed```. It will create the form and user. Username and password is  ```admin```. But this is for test purposes only.
+- In api I created custom decorator for getting sender socket id. that way only non sender socket will refresh the session.
+- For testing with docker just rrun with  ```docker compose up -d```. this will download postgresql build images and run them. Also, it will generate prisma & seed the database (only for first run)

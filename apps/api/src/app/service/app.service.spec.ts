@@ -83,9 +83,12 @@ describe('AppService', () => {
           id: 'form-1',
           key: 'glp1',
           name: 'Test Form',
-          version: '1.0.0',
+          version: 1,
           startStepId: 'step-1',
           createdAt: new Date(),
+          startStepKey: 'step-1',
+          description: 'Test Description',
+          isActive: true,
         },
       ];
 
@@ -125,9 +128,12 @@ describe('AppService', () => {
         id: 'form-1',
         key: 'glp1',
         name: 'Test Form',
-        version: '1.0.0',
+        version: 1,
         startStepId: 'step-1',
         createdAt: new Date(),
+        startStepKey: 'step-1',
+        description: 'Test Description',
+        isActive: true,
       };
 
       mockPrismaService.form.findUnique.mockResolvedValue(mockForm);
@@ -165,6 +171,9 @@ describe('AppService', () => {
       const mockForm = {
         id: 'form-1',
         startStepId: 'step-1',
+        startStepKey: 'step-1',
+        description: 'Test Description',
+        isActive: true,
       };
 
       const mockSession: FormSession = {
@@ -253,6 +262,7 @@ describe('AppService', () => {
           branches: [],
           options: [],
           version: 1,
+          nextStepKey: null,
         },
         form: {
           _count: {
@@ -336,11 +346,15 @@ describe('AppService', () => {
         id: 'form-1',
         key: 'glp1',
         name: 'Test Form',
-        version: '1.0.0',
+        version: 1,
         startStepId: 'step-1',
         createdAt: new Date(),
+        startStepKey: 'step-1',
+        description: 'Test Description',
+        isActive: true,
       },
       version: 1,
+      nextStepKey: null,
     };
 
     const mockAnswer: FormAnswer = {
@@ -581,7 +595,8 @@ describe('AppService', () => {
         nextStepId: 'step-2',
         createdAt: new Date(),
         branches: [],
-        version: 1
+        version: 1,
+        nextStepKey: null,
       },
       answers: [
         {

@@ -5,6 +5,7 @@ import { Manrope } from 'next/font/google'
 import { useEffect, useState } from 'react';
 import { createContext } from 'react';
 import SideImage from './components/side-image';
+//eslint-disable-next-line
 export const SideImageContext = createContext<{ sideImage: string, setSideImage: (sideImage: string) => void }>({ sideImage: '', setSideImage: () => { } });
 const manrope = Manrope({
   subsets: ['latin'],

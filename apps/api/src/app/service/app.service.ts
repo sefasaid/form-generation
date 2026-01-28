@@ -71,7 +71,7 @@ export class AppService {
   }
 
   async getSession(id: string): Promise<FormSession> {
-    let session = await this.prisma.formSession.findUnique({
+    const session = await this.prisma.formSession.findUnique({
       where: { id },
       include: {
         currentStep: {
