@@ -11,7 +11,7 @@ This guide explains how to run the Form Assignment project using Docker.
 
 1. **Copy the environment file:**
    ```bash
-   cp env.example .env
+   cp e.nv.example .env
    ```
 
 2. **Update the `.env` file** with your desired configuration (especially passwords for production)
@@ -24,16 +24,11 @@ This guide explains how to run the Form Assignment project using Docker.
 4. **Access the application:**
    - Frontend: http://localhost:3000
    - API: http://localhost:3001
-   - PostgreSQL: localhost:5432
 
 ## Services
 
 ### PostgreSQL Database
-- **Container**: `form-postgres`
-- **Port**: 5432 (configurable via `POSTGRES_PORT`)
-- **Database**: `formdb` (configurable via `POSTGRES_DB`)
-- **User**: `postgres` (configurable via `POSTGRES_USER`)
-- **Password**: `postgres` (configurable via `POSTGRES_PASSWORD`)
+- **Please Use External**: `set url in .env`
 
 ### API Service
 - **Container**: `form-api`
@@ -51,11 +46,6 @@ This guide explains how to run the Form Assignment project using Docker.
 Create a `.env` file in the root directory with the following variables:
 
 ```env
-# Database Configuration
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-POSTGRES_DB=formdb
-POSTGRES_PORT=5432
 
 # Database URL (used by Prisma)
 DATABASE_URL=postgresql://postgres:postgres@postgres:5432/formdb?schema=public
@@ -86,7 +76,6 @@ docker-compose logs -f
 # Specific service
 docker-compose logs -f api
 docker-compose logs -f frontend
-docker-compose logs -f postgres
 ```
 
 ### Stop services
@@ -115,10 +104,6 @@ docker-compose exec api npx prisma migrate deploy
 docker-compose exec api npx prisma db seed
 ```
 
-### Access database shell
-```bash
-docker-compose exec postgres psql -U postgres -d formdb
-```
 
 ## Building Individual Images
 
@@ -145,10 +130,6 @@ docker build -f Dockerfile.frontend -t form-frontend:latest .
 
 ## Troubleshooting
 
-### Database connection issues
-- Ensure PostgreSQL container is healthy: `docker-compose ps`
-- Check database logs: `docker-compose logs postgres`
-- Verify DATABASE_URL in `.env` matches docker-compose configuration
 
 ### API not starting
 - Check API logs: `docker-compose logs api`
