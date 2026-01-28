@@ -2,32 +2,22 @@
 FROM node:22-alpine AS base
 
 # Install dependencies only when needed
-FROM base AS deps
-RUN apk add --no-cache libc6-compat
+FROM base AS builder
 WORKDIR /app
 
 # Copy package files
-COPY package.json package-lock.json ./
-COPY apps/api/package.json ./apps/api/
-COPY packages/prisma-client-types/package.json ./packages/prisma-client-types/
-COPY prisma/package.json ./prisma/
-RUN npm config set strict-ssl false
-# Install dependencies
-RUN npm ci --registry https://registry.yarnpkg.com
-
-# Rebuild the source code only when needed
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+# somehow it makes faster
+RUN npm config set strict-ssl false
+# Install dependencies
+RUN npm ci --only=development --silent --registry https://registry.yarnpkg.com
 # Generate Prisma Client
 ARG DATABASE_URL
 RUN DATABASE_URL="$DATABASE_URL" npx prisma generate
 
 # deploy migrations and seed
 RUN DATABASE_URL="$DATABASE_URL" npx prisma migrate deploy
-
 
 # Build the API
 RUN npx nx build api --configuration=production
@@ -38,21 +28,21 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
+WORKDIR /app
 
-# Create a non-root user
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nestjs
+# Copy package files
+COPY package.json package-lock.json ./
+COPY apps/api/package.json ./apps/api/
+RUN npm config set strict-ssl false
+# Install dependencies for production
+RUN npm ci --omit=dev --silent --registry https://registry.yarnpkg.com
 
-# Copy necessary files
-COPY --from=builder --chown=nestjs:nodejs /app/apps/api/dist ./dist
-COPY --from=builder --chown=nestjs:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=nestjs:nodejs /app/libs/prismaModule/src/generated ./libs/prismaModule/src/generated
-COPY --from=builder --chown=nestjs:nodejs /app/prisma ./prisma
-COPY --from=builder --chown=nestjs:nodejs /app/package.json ./package.json
-COPY --from=builder --chown=nestjs:nodejs /app/nx.json ./nx.json
-COPY --from=builder --chown=nestjs:nodejs /app/tsconfig.base.json ./tsconfig.base.json
-
-USER nestjs
+# Copy build output
+COPY --from=builder /app/apps/api/dist ./dist
+COPY --from=builder /app/libs/prismaModule/src/generated ./libs/prismaModule/src/generated
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/nx.json ./nx.json
+COPY --from=builder /app/tsconfig.base.json ./tsconfig.base.json
 
 EXPOSE 3001
 
