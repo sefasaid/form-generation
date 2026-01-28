@@ -16,6 +16,15 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es2022",
-    "customConditions": ["@org/source"]
+    "customConditions": ["@org/source"],
+    "baseUrl": ".",
+    "paths": {
+      "@org/prisma": ["generated/prisma"],
+      "@org/prisma/*": ["generated/prisma/*"],
+      "@org/prisma-module": ["libs/prismaModule/src"],
+      "@org/prisma-module/*": ["libs/prismaModule/src/*"],
+      "@org/nextFetch": ["libs/nextFetch/src/index.ts"],
+      "@org/nextFetch/*": ["libs/nextFetch/src/*"]
+    }
   }
 }

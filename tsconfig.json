@@ -2,5 +2,30 @@
   "extends": "./tsconfig.base.json",
   "compileOnSave": false,
   "files": [],
-  "references": []
+  "references": [
+    {
+      "path": "./apps/api"
+    },
+    {
+      "path": "./apps/frontend-e2e"
+    },
+    {
+      "path": "./apps/frontend"
+    },
+    {
+      "path": "./prisma"
+    },
+    {
+      "path": "./libs/nextFetch"
+    }
+  ],
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@org/prisma": ["/prisma"],
+      "@org/prisma/*": ["/prisma/*"],
+      "@org/prisma-module": ["libs/prismaModule/src"],
+      "@org/prisma-module/*": ["libs/prismaModule/src/*"]
+    }
+  }
 }
