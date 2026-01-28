@@ -208,4 +208,5 @@ nx build frontend
 - Created custom type builder for frontend. When using ```prisma generate``` it automatically builds prisma types for frontend to keep typesafe between projects. ( I tried using prisma browser but it doesn't contain nested fields)
 - To create initial database use  ```prisma db seed```. It will create the form and user. Username and password is  ```admin```. But this is for test purposes only.
 - In api I created custom decorator for getting sender socket id. that way only non sender socket will refresh the session.
-- For testing with docker just rrun with  ```docker compose up -d```. this will download postgresql build images and run them. Also, it will generate prisma & seed the database (only for first run)
+- For testing with docker just create .env file (you can copy paste env.example) put the db url and run with  ```docker compose up -d```. 
+
